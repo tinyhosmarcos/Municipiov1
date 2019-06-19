@@ -21,7 +21,7 @@ class Estudiante(models.Model):
 	fecha_nacimiento	= models.DateField()
 	dni					= models.IntegerField(primary_key=True)
 	def __str__(self):
-		return self.nombre
+		return str(self.dni)
 
 class Ranking(models.Model):
 	area 	 			= models.ForeignKey(Area,on_delete=models.CASCADE)
