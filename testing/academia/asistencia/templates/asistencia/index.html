@@ -30,12 +30,12 @@
 			<div class="col s6">
 				<div class="nav-wrapper">
 					{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
-					<form method="get">
+					<form  method="get" action="" >
 							<div class="input-field col s6">
 							<i class="material-icons prefix">search</i>
-							<input type="text" name="estudiante" id="autocomplete-input estudiante" value="{{estudiante.dni}}" class="autocomplete" >
-							<label for="autocomplete-input estudiante">Codigo de Alumno</label>
-							<button class="btn waves-effect waves-light" type="submit" name="elegir_estudiante" value="elegir_estudiante">Buscar
+							<input type="text" name="estudiante_id" id="autocomplete-input" class="autocomplete" >
+							<label for="autocomplete-input">Codigo de Alumno</label>
+							<button  class="btn waves-effect waves-light" type="submit" value="elegir_estudiante">Buscar
    							 <i class="material-icons right">send</i>
  							</button>
 						</div>
@@ -43,19 +43,7 @@
 				</div>
 			</div>
 			<div class="col s6">
-				<ul>
-				<form method="get">
-						<div class="row">
-							<div class="col-md-6 col-md-offset-3">
-								<div class="form-group">
-										<label for="estudiante_id">codigo alumno </label>
-										<input class= "form-control" type="text" name="estudiante_id">
-								</div>
-								<input class="btn btn-primary" type="submit" value="elegir_estudiante">
-							</div>												
-						</div>
-				</form>					
-				</ul>
+				
 			</div>
 		</div>		
 

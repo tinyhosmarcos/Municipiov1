@@ -8,7 +8,8 @@ from . import views
 app_name='asistencia'
 urlpatterns = [
 	url(r'^$', login_required(views.index), name='index'),
-	url(r'^elegir_estudiante(?P<estudiante_id>[0-9]+)/$', views.elegir_estudiante, name='elegir_estudiante'),
+	url(r'(?P<estudiante_id>[0-9]+)/$', views.estudiante, name='estudiante'),
 ]	
 
-"""url(r'^(?P<estudiante_id>[0-9]+)/$', views.estudiante, name='estudiante'),"""
+"""
+url(r'elegir_estudiante/$', views.Estudiante.as_view(), name='estudiante'),"""
