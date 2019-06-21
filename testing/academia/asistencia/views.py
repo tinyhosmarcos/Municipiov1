@@ -8,36 +8,37 @@ from .forms import *
 def index(request):
 	estudiantes_list = Estudiante.objects.all()
 
-
-	context ={
-		'estudiantes_list':estudiantes_list,
-	}
 	query=request.GET.get('estudiante_id')
 	if query:
 		estudiante = get_object_or_404(Estudiante,pk=query)
-		return render(request,'asistencia/estudiante.html',{'estudiante':estudiante})
+		context ={
+		'estudiantes_list':estudiantes_list,
+		'estudiante':estudiante,
+	}
+		return render(request,'asistencia/estudiante.html',context)
 	else:
+		context ={
+		'estudiantes_list':estudiantes_list,
+
+	}
 		return render(request, 'asistencia/index.html', context)
-"""
 
-
-class IndexView(generic.ListView):
-    template_name = 'asistencia/index.html'
-    context_object_name = 'estudiantes_list'
-
-    query=request.GET.get('estudiante_id')
-    
-    def get_queryset(self):
-
-    	if query:
-    		return Estudiante.objects.get(pk=query)
-    	else:	
-        	return Estudiante.objects.all()
-"""
 
 
 def estudiante(request, estudiante_id):
+	estudiantes_list = Estudiante.objects.all()
+	
+	query=request.GET.get('estudiante_id')
+	if query:
+		estudiante = get_object_or_404(Estudiante,pk=query)
+		context ={
+		'estudiantes_list':estudiantes_list,
+		'estudiante':estudiante,
+	}
+		return render(request,'asistencia/estudiante.html',{'estudiante':estudiante})
+	else:
+		context ={
+		'estudiantes_list':estudiantes_list,
 
-	estudiante 	= get_object_or_404(Estudiante,pk=estudiante_id)
-	return render(request, 'asistencia/estudiante.html',{'estudiante':estudiante})
-
+	}
+		return render(request, 'asistencia/index.html', context)

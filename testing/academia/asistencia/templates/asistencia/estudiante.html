@@ -1,6 +1,136 @@
-<h1>{{ estudiante.nombre }}</h1>
-<ul>sdf
-{% for examen in estudiante.examen_set.all %}
-    <li>{{ examen.codigo }}</li>
-{% endfor %}
-</ul>
+{% load static %}
+<html>
+	<head>
+		<title>Academia Municipal</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+
+	<body>
+
+		<ul id="slide-out" class="sidenav">
+			<li><a href="#!">First Sidebar Link</a></li>
+			<li><a href="#!">Second Sidebar Link</a></li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper indigo darken-1">
+				<a href="#!" class=" brand-logo">Academia Municipal</a>	
+				<ul class="right hide-on-med-and-down">
+					<li><a href="sass.html">Ranking</a></li>
+					<li><a href="badges.html">Panel Admin</a></li>
+					<!-- Dropdown Trigger -->
+					<li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons right">account_circle</i>{{user}}</a></li>
+
+				</ul>
+			</div>
+		</nav>
+		<div class="row">
+			<div class="col s6">
+		
+					<div class="nav-wrapper">
+						{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+						<form  method="get" action="" >
+								<div class="input-field col s6">
+								<i class="material-icons prefix">search</i>
+								<input type="text" name="estudiante_id" id="autocomplete-input" class="autocomplete" >
+								<label for="autocomplete-input">Codigo de Alumno</label>
+								<button  class="btn waves-effect waves-light" type="submit" value="elegir_estudiante">Buscar
+									 <i class="material-icons right">send</i>
+									</button>
+							</div>
+						</form>
+					</div>
+					<br><br>
+			  <div class="container">
+			  	<h2>Resultado de Examenes</h2>
+					<table>
+					
+						<thead>
+						<tr>
+						<th>Codigo</th>
+						<th>Fecha</th>
+						<th>Nota</th>
+						</tr>
+						</thead>
+
+						<tbody>
+						{%for examen in estudiante.examen_set.all%}
+						<tr>
+							<td>{{examen.codigo}}da</td>
+							<td>{{examen.fecha}}</td>
+							<td>{{examen.nota}}</td>
+						</tr>
+						{%endfor%}
+						
+						</tbody>
+					</table>
+ 
+            </div>
+			</div>
+			<div class="col s6">
+				<div class="card horizontal">
+					<div class="card-image">
+						<i class="large material-icons center-align">account_circle</i>
+					</div>
+					<div class="card-stacked">
+						<div class="card-content  ">
+							<div class="row">
+						      <div class="col s6">
+						      	<ul>
+						      		<li>Nombre</li>
+						      		<li>Apellido</li>
+						      		<li>DNI</li>
+						      	</ul>
+						      </div>
+						      <div class="col s6">
+						      	<ul>
+						      		<li>{{estudiante.nombre}}</li>
+						      		<li>{{estudiante.apellido}}</li>
+						      		<li>{{estudiante.dni}}</li>
+						      	</ul>
+						      </div>
+						    </div>
+
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			
+		</div>		
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
+	<script type="text/javascript">
+
+
+
+		document.addEventListener('DOMContentLoaded', function() {
+		var elems_sidenav = document.querySelectorAll('.sidenav');
+		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
+		
+		var elems_autocomplete = document.querySelectorAll('.autocomplete');
+		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
+		});
+
+
+		$(document).ready(function(){
+			$('.sidenav').sidenav();
+			$('input.autocomplete').autocomplete({
+				data: {
+				{% for estudiant in estudiantes_list %}
+					{{estudiant.dni}}:null,
+				{% endfor %}
+				},
+    		});
+		});
+        
+	</script>	
+	</body>
+	
+</html>
+
+
+
