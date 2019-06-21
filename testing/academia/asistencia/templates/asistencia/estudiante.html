@@ -1,0 +1,6 @@
+<h1>{{ estudiante.nombre }}</h1>
+<ul>
+{% for examen in estudiante.examen_set.all %}
+    <li>{{ examen.codigo }}</li>
+{% endfor %}
+</ul>

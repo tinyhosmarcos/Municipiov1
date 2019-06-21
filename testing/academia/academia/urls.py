@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import login, logout_then_login
 
 urlpatterns = [
-	url('^asistencia/', include('asistencia.urls')),
-    url(r'^admin/', admin.site.urls),
+	url(r'^asistencia/', include('asistencia.urls')),
+	url(r'^admin/logout',logout_then_login, name='logout'),
+	url(r'^admin/', admin.site.urls),
+	url(r'^accounts/login/',login,{'template_name':'register/index.html'}, name='login'),
+    url(r'^logout/',logout_then_login, name='logout')
 ]

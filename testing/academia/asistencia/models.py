@@ -39,25 +39,13 @@ class Examen(models.Model):
 	def __str__(self):
 		return self.codigo
 
-class ListaAsistencia(models.Model):
-	estudiante 			= models.OneToOneField(Estudiante,on_delete=models.CASCADE)
-	def __str__(self):
-		return self.estudiante.nombre
 
-class RegistroDia(models.Model):
-	listaAsistencia		= models.ForeignKey(ListaAsistencia,on_delete=models.CASCADE)
+class RegistroAsistencia(models.Model):
+	estudiante 			= models.ForeignKey(Estudiante,on_delete=models.CASCADE)
 	fecha 				= models.DateField(default=date.today)
+	registro_dia 		= models.BooleanField(default=False)
+	registro_tarde 		= models.BooleanField(default=False)
+	registro_seminario  = models.BooleanField(default=False)
 	def __str__(self):
-	   	return str(self.fecha)
-
-class RegistroTarde(models.Model):
-	listaAsistencia		= models.ForeignKey(ListaAsistencia,on_delete=models.CASCADE)
-	fecha  				= models.DateField(default=date.today)
-	def __str__(self):
-		return str(self.fecha)
-class RegistroSeminario(models.Model):
-	listaAsistencia		= models.ForeignKey(ListaAsistencia,on_delete=models.CASCADE)
-	fecha 				= models.DateField(default=date.today)
-	def __str__(self):
-		return str(self.fecha)
+	   	return str(self.fecha)+str(self.estudiante)
 

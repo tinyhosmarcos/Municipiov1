@@ -34,6 +34,11 @@ class GrupoAdmin(admin.ModelAdmin):
 	list_display = ('codigo', 'numero_alumnos')
 	search_fields =['codigo']
 
+class RegistroAsistenciaInline(admin.TabularInline):
+	model = RegistroAsistencia
+	extra = 4
+
+
 class EstudianteAdmin(admin.ModelAdmin):
 	fieldsets=[
 		('Informacion',{'fields':['grupo']}),
@@ -43,6 +48,7 @@ class EstudianteAdmin(admin.ModelAdmin):
 		(None,{'fields':['dni']}),
 	]
 	raw_id_fields = ("grupo",)
+	inlines = [RegistroAsistenciaInline]
 	formfield_overrides = {
 		models.IntegerField: {'widget': forms.NumberInput(attrs={'size': '40'})},
 	}
@@ -67,10 +73,8 @@ class RankingAdmin(admin.ModelAdmin):
 admin.site.register(Area,AreaAdmin)
 admin.site.register(Grupo,GrupoAdmin)
 admin.site.register(Estudiante,EstudianteAdmin)
-
+admin.site.register(RegistroAsistencia)
 admin.site.register(Ranking,RankingAdmin)
-admin.site.register(ListaAsistencia)
-admin.site.register(RegistroDia)
-admin.site.register(RegistroTarde)
-admin.site.register(RegistroSeminario)
+
+
 admin.site.register(Examen)

@@ -1,3 +1,94 @@
 {% load static %}
+<html>
+	<head>
+		<title>Academia Municipal</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
 
-<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+	<body>
+
+		<ul id="slide-out" class="sidenav">
+			<li><a href="#!">First Sidebar Link</a></li>
+			<li><a href="#!">Second Sidebar Link</a></li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper indigo darken-1">
+				<a href="#!" class=" brand-logo">Academia Municipal</a>	
+				<ul class="right hide-on-med-and-down">
+					<li><a href="sass.html">Ranking</a></li>
+					<li><a href="badges.html">Panel Admin</a></li>
+					<!-- Dropdown Trigger -->
+					<li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons right">account_circle</i>{{user}}</a></li>
+
+				</ul>
+			</div>
+		</nav>
+		<div class="row">
+			<div class="col s6">
+				<div class="nav-wrapper">
+					{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+					<form method="get">
+							<div class="input-field col s6">
+							<i class="material-icons prefix">search</i>
+							<input type="text" name="estudiante" id="autocomplete-input estudiante" value="{{estudiante.dni}}" class="autocomplete" >
+							<label for="autocomplete-input estudiante">Codigo de Alumno</label>
+							<button class="btn waves-effect waves-light" type="submit" name="elegir_estudiante" value="elegir_estudiante">Buscar
+   							 <i class="material-icons right">send</i>
+ 							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col s6">
+				<ul>
+				<form method="get">
+						<div class="row">
+							<div class="col-md-6 col-md-offset-3">
+								<div class="form-group">
+										<label for="estudiante_id">codigo alumno </label>
+										<input class= "form-control" type="text" name="estudiante_id">
+								</div>
+								<input class="btn btn-primary" type="submit" value="elegir_estudiante">
+							</div>												
+						</div>
+				</form>					
+				</ul>
+			</div>
+		</div>		
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
+	<script type="text/javascript">
+
+
+
+		document.addEventListener('DOMContentLoaded', function() {
+		var elems_sidenav = document.querySelectorAll('.sidenav');
+		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
+		
+		var elems_autocomplete = document.querySelectorAll('.autocomplete');
+		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
+		});
+
+
+		$(document).ready(function(){
+			$('.sidenav').sidenav();
+			$('input.autocomplete').autocomplete({
+				data: {
+				{% for estudiante in estudiantes_list %}
+					{{estudiante.dni}}:null,
+				{% endfor %}
+				},
+    		});
+		});
+        
+	</script>	
+	</body>
+	
+</html>
+
+
+
