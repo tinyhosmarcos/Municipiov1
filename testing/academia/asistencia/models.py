@@ -41,11 +41,14 @@ class Examen(models.Model):
 
 
 class RegistroAsistencia(models.Model):
+	class Meta:
+		unique_together = (('estudiante', 'fecha'),)
 	estudiante 			= models.ForeignKey(Estudiante,on_delete=models.CASCADE)
 	fecha 				= models.DateField(default=date.today)
 	registro_dia 		= models.BooleanField(default=False)
 	registro_tarde 		= models.BooleanField(default=False)
 	registro_seminario  = models.BooleanField(default=False)
 	def __str__(self):
-	   	return str(self.fecha)+str(self.estudiante)
+	   	return str(self.fecha)+str(" ")+str(self.estudiante)
+	
 

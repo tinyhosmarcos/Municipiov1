@@ -9,6 +9,7 @@ app_name='asistencia'
 urlpatterns = [
 	url(r'^$', login_required(views.index), name='index'),
 	url(r'(?P<estudiante_id>[0-9]+)/$', views.estudiante, name='estudiante'),
+	url(r'^pruebas',views.pruebas, name='pruebas'),
 ]	
 
 """

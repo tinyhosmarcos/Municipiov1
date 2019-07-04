@@ -1,0 +1,100 @@
+{% load static %}
+<html>
+	<head>
+		<title>Academia Municipal</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style.css' %}">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<form method="POST">{%csrf_token%}
+			<div class="col s12">
+				<label>
+					{{form.estudiante}}
+				</label>
+			</div>
+	<div class="col s1">
+		<i class="small material-icons date ">date_range</i>
+			</div>
+	  	<div class="col s11">
+	  		<label>
+ 		 		{{form.fecha}}
+			</label>
+		</div>
+	
+		<h6 class="header turno">Turno</h6>
+
+		<div class="col s4">
+			<label>
+				{{form.registro_dia}}
+				<span>Mañana</span>
+			</label>
+		</div>
+		<div class="col s4">
+			<label>
+				{{form.registro_tarde}}
+				<span>Tarde</span>
+			</label>
+		</div>
+		<div class="col s4">
+			<label>
+				{{form.registro_seminario}}
+				<span>Seminario</span>
+			</label>
+		</div>
+		<div class="col s12 center-align">
+			<button class="waves-effect waves-light btn registrar" type="submit">Registrar</button>
+		</div>			
+<input type="submit" value="Save">
+
+		</form>
+	</div>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
+	<script type="text/javascript">
+		$('#checkbox-value').text($('#checkbox3').val());
+
+$("#checkbox3").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+  } else {
+    $(this).attr('value', 'false');
+  }
+  
+  $('#checkbox-value').text($('#checkbox3').val());
+});
+		document.addEventListener('DOMContentLoaded', function() {
+		var elems_sidenav = document.querySelectorAll('.sidenav');
+		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
+		
+		var elems_autocomplete = document.querySelectorAll('.autocomplete');
+		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
+
+		var elems_datepicker = document.querySelectorAll('.datepicker');
+    	var instances_datepicker = M.Datepicker.init(elems_datepicker, options);
+		});
+
+
+		$(document).ready(function(){
+			$('.datepicker').datepicker({
+				format:'yyyy-mm-dd',
+				
+			});
+			$('.sidenav').sidenav();
+			$('input.autocomplete').autocomplete({
+				data: {
+				{% for estudiant in estudiantes_list %}
+					{{estudiant.dni}}:null,
+				{% endfor %}
+				},
+    		});
+		});
+        
+	</script>	
+</body>
+</html>

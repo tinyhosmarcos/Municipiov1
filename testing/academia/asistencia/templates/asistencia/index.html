@@ -2,35 +2,52 @@
 <html>
 	<head>
 		<title>Academia Municipal</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style.css' %}">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 
 	<body>
-
+	
 		<ul id="slide-out" class="sidenav">
-			<li><a href="#!">First Sidebar Link</a></li>
-			<li><a href="#!">Second Sidebar Link</a></li>
+			<li><a href="{%url 'admin:index'%}">Panel de Administrador</a></li>
+			<li><a href="{%url 'logout'%}">Cerrar Sesión</a></li>
 		</ul>
 
 		<nav>
+			
 			<div class="nav-wrapper indigo darken-1">
+				<div class="container">
 				<a href="#!" class=" brand-logo">Academia Municipal</a>	
 				<ul class="right hide-on-med-and-down">
-					<li><a href="sass.html">Ranking</a></li>
-					<li><a href="badges.html">Panel Admin</a></li>
+					<li><a href="{%url 'asistencia:ranking'%}">Ranking</a></li>
+					<li><a href="">Grupos</a></li>
 					<!-- Dropdown Trigger -->
 					<li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons right">account_circle</i>{{user}}</a></li>
 
 				</ul>
 			</div>
+		</div>
 		</nav>
+
+
+		
 		<div class="row">
-			<div class="col s6">
+			<div class="col s3 index">
+				<div class="container">
+					<div class="card-panel teal">
+				        <span class="white-text">I am a very simple card. I am good at containing small bits of information.
+				        I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+				        </span>
+				</div>
+			</div>
+		</div>
+
+				<div class="col s9">
 				<div class="nav-wrapper">
 					{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
-					<form  method="get" action="" >
+					<form  method="get">
 							<div class="input-field col s6">
 							<i class="material-icons prefix">search</i>
 							<input type="text" name="estudiante_id" id="autocomplete-input" class="autocomplete" >
@@ -41,38 +58,16 @@
 						</div>
 					</form>
 				</div>
+				{%block content%}
+		{%endblock%}
+			
 			</div>
-			<div class="col s6">
-				<div class="card horizontal">
-					<div class="card-image">
-						<i class="large material-icons center-align">account_circle</i>
-					</div>
-					<div class="card-stacked">
-						<div class="card-content  ">
-							<div class="row">
-						      <div class="col s6">
-						      	<ul>
-						      		<li>Nombre</li>
-						      		<li>Apellido</li>
-						      		<li>DNI</li>
-						      	</ul>
-						      </div>
-						      <div class="col s6">
-						      	<ul>
-						      		<li>{{estudiante.nombre}}</li>
-						      		<li>{{estudiante.apellido}}</li>
-						      		<li>{{estudiante.dni}}</li>
-						      	</ul>
-						      </div>
-						    </div>
 
-						</div>
-						
-					</div>
-				</div>
-			</div>
-		</div>		
 
+		</div>	
+
+		</div>	
+		
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
 	<script type="text/javascript">

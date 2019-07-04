@@ -4,14 +4,15 @@
 		<title>Academia Municipal</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}" />
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style.css' %}">		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 
 	<body>
 
 		<ul id="slide-out" class="sidenav">
-			<li><a href="#!">First Sidebar Link</a></li>
-			<li><a href="#!">Second Sidebar Link</a></li>
+			<li><a href="{%url 'admin:index'%}">Panel de Administrador</a></li>
+			<li><a href="{%url 'logout'%}">Cerrar Sesión</a></li>
 		</ul>
 
 		<nav>
@@ -26,54 +27,52 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="row">
-			<div class="col s6">
 		
-					<div class="nav-wrapper">
-						{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
-						<form  method="get" action="" >
-								<div class="input-field col s6">
+			<div class="row">
+				<div class="col s6">
+  					<div class="container section">
+    					<form  method="get" action="" >
+								<div class="input-field">
 								<i class="material-icons prefix">search</i>
 								<input type="text" name="estudiante_id" id="autocomplete-input" class="autocomplete" >
 								<label for="autocomplete-input">Codigo de Alumno</label>
 								<button  class="btn waves-effect waves-light" type="submit" value="elegir_estudiante">Buscar
 									 <i class="material-icons right">send</i>
 									</button>
-							</div>
+								</div>
 						</form>
 					</div>
-					<br><br>
-			  <div class="container">
-			  	<h2>Resultado de Examenes</h2>
-					<table>
-					
-						<thead>
-						<tr>
-						<th>Codigo</th>
-						<th>Fecha</th>
-						<th>Nota</th>
-						</tr>
-						</thead>
+  				
+			  		<div class="container divider"></div>
+			  		<div class="container section">
+			  			<h3>Resultado de Examenes</h3>
+							<table>
+								<thead>
+								<tr>
+									<th>Codigo</th>
+									<th>Fecha</th>
+									<th>Nota</th>
+								</tr>
+								</thead>
 
-						<tbody>
-						{%for examen in estudiante.examen_set.all%}
-						<tr>
-							<td>{{examen.codigo}}da</td>
-							<td>{{examen.fecha}}</td>
-							<td>{{examen.nota}}</td>
-						</tr>
-						{%endfor%}
-						
-						</tbody>
-					</table>
- 
-            </div>
-			</div>
-			<div class="col s6">
-				<div class="card horizontal">
-					<div class="card-image">
-						<i class="large material-icons center-align">account_circle</i>
-					</div>
+								<tbody>
+									{%for examen in estudiante.examen_set.all%}
+								<tr>
+									<td>{{examen.codigo}}da</td>
+									<td>{{examen.fecha}}</td>
+									<td>{{examen.nota}}</td>
+								</tr>
+									{%endfor%}
+								</tbody>
+							</table>
+ 					</div>
+				</div>
+				<div class="col s6">
+					<div class="container section">
+					<div class=" card horizontal ">
+						<div class="card-image estudiante">
+							<i class="large material-icons center-align">account_circle</i>
+						</div>
 					<div class="card-stacked">
 						<div class="card-content  ">
 							<div class="row">
@@ -92,31 +91,88 @@
 						      	</ul>
 						      </div>
 						    </div>
+						</div>						
+					</div>
+					</div>
+					</div>
+					<div class="container divider"></div>
+					<div class="container section">
+						 <h3 class="header">Registro de Asistencia</h3>
+						  <div class="card-panel transparent">
+							
+							<div class="row">
+								<h6>Ingrese la Fecha</h6>
+					
 
+						<form  method="POST" action="">
+						{%csrf_token%}
+			<div class="col s12">
+				<label>
+					{{form.estudiante}}
+				</label>
+			</div>
+	<div class="col s1">
+		<i class="small material-icons date ">date_range</i>
+			</div>
+	  	<div class="col s11">
+	  		<label>
+ 		 		{{form.fecha}}
+			</label>
+		</div>
+	
+		<h6 class="header turno">Turno</h6>
+
+		<div class="col s4">
+			<label>
+				{{form.registro_dia}}
+				<span>Mañana</span>
+			</label>
+		</div>
+		<div class="col s4">
+			<label>
+				{{form.registro_tarde}}
+				<span>Tarde</span>
+			</label>
+		</div>
+		<div class="col s4">
+			<label>
+				{{form.registro_seminario}}
+				<span>Seminario</span>
+			</label>
+		</div>
+		<div class="col s12 center-align">
+			<button class="waves-effect waves-light btn registrar" type="submit">Registrar</button>
+		</div>			
+
+
+		</form>
 						</div>
-						
+						  </div>
 					</div>
 				</div>
 			</div>
-			
-		</div>		
+
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
 	<script type="text/javascript">
-
-
-
 		document.addEventListener('DOMContentLoaded', function() {
 		var elems_sidenav = document.querySelectorAll('.sidenav');
 		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
 		
 		var elems_autocomplete = document.querySelectorAll('.autocomplete');
 		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
+
+		var elems_datepicker = document.querySelectorAll('.datepicker');
+    	var instances_datepicker = M.Datepicker.init(elems_datepicker, options);
 		});
 
 
 		$(document).ready(function(){
+			$('.datepicker').datepicker({
+				format:'yyyy-mm-dd',
+				
+			});
 			$('.sidenav').sidenav();
 			$('input.autocomplete').autocomplete({
 				data: {

@@ -53,7 +53,7 @@ class EstudianteAdmin(admin.ModelAdmin):
 		models.IntegerField: {'widget': forms.NumberInput(attrs={'size': '40'})},
 	}
 	list_display=('dni','nombre','apellido','fecha_nacimiento')
-	search_fields=['dni']
+	search_fields=['nombre']
 
 class ExamenInline(admin.TabularInline):
 	model = Examen
