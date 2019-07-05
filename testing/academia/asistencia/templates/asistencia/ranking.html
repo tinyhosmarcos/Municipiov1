@@ -4,7 +4,7 @@
 {%block body%}
 
 <div class="container row">
-	<div class="col s3">
+	<div class="col s3 index">
 		<div class="section">
 			<form method="GET" >
 				{{form.as_p}}
@@ -26,21 +26,28 @@
 				<button class="waves-effect waves-light btn registrar" name="ranking_get" type="submit">Buscar</button>
 			</form>
 		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<h5>Cambios</h5>
+			<a class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_ranking_add' %}">Agregar</a>		
+			<a class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_ranking_changelist' %}">Eliminar</a>
+		</div>
 	</div>	
 
 	<div class="col s9">
 		<div class="section">
 			<div class="row">
-				<div class="col s4">
-					<p>Examen: {{ranking_default.id}}</p>
+				<div class="col s4 ">
+					<p class="center-align">Examen: {{ranking_default.id}}</p>
 				</div>
 				<div class="col s4">
-					<p>Area: {{ranking_default.area}}</p>
+					<p >Area: {{ranking_default.area}}</p>
 				</div>
 				<div class="col s4">
 					<p>Fecha: {{ranking_default.fecha}}</p>
 				</div>
 			</div>
+			<h5 class="center-align"> Lista de Examenes</h5>
 		</div>
 		<div class="divider"></div>
 		<div class="section">

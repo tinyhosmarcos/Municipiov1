@@ -111,9 +111,21 @@ def ranking(request):
 		
 def grupo(request):
 		grupos_list=Grupo.objects.all()
-		print("Grupo")
+		grupo_default=Grupo.objects.last()
+		query=None
+		form=AreaForm(request.GET or None)
+		if form.is_valid():
+			query=request.GET.get('area')
+			grupos_list=Grupo.objects.filter(area=query)
+		print(query)
+		if 'grupo_get' in request.GET:
+			query=request.GET.get('grupoid_list')
+			print("grupo_get",query)
+			grupo_default=Grupo.objects.get(pk=query)
 		context={
 			'grupos_list':grupos_list,
+			'form':form,
+			'grupo_default':grupo_default,
 		}
 		return render(request,'asistencia/grupo.html',context)
 

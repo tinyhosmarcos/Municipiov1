@@ -19,4 +19,4 @@ class AsistenciaForm(forms.ModelForm):
 		}
 
 class AreaForm(forms.Form):
-	 area= forms.ModelChoiceField(queryset = Area.objects.all(),empty_label=None)
+	area= forms.ModelChoiceField(queryset = Area.objects.all(),empty_label=None)

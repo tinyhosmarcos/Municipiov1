@@ -1,10 +1,13 @@
 li a {
-    color: green;
+    color: #6200ea    ;
 }
 .divider.a {
 	height: 3px;
 }
 .col.s3.index{
+	 border-right: 1px solid #e0e0e0;
+}
+.col.s6.index{
 	 border-right: 1px solid #e0e0e0;
 }
 .card-image.estudiante{

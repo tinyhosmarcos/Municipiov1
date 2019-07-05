@@ -2,5 +2,76 @@
 {% load static %}
 {%block title%} Grupos {%endblock%}
 {%block body%}
-<p>Hola</p>
+<div class="container row">
+	<div class="col s3 index">
+		<div class="section">
+			<form method="GET" >
+				{{form.as_p}}
+				<button class="waves-effect waves-light btn registrar" name="area_get" type="submit">Buscar</button>
+			</form>
+		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<form method="GET">
+				<div class="input-field">		
+						<select name="grupoid_list">
+							<option value="" disabled selected>Grupo</option>
+							{%for grupo in grupos_list %}
+								<option value="{{grupo.id}}">{{grupo.codigo}}</option>
+							{%endfor%}
+						</select>
+						<label>Grupo</label>
+					</div>
+				<button class="waves-effect waves-light btn registrar" name="grupo_get" type="submit">Buscar</button>
+			</form>
+		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<h5>Cambios</h5>
+			<a class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_grupo_add' %}">Agregar</a>		
+			<a class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_grupo_changelist' %}">Eliminar</a>
+		</div>
+	</div>
+	<div class="col s9">
+		<div class="section">
+			<div class="row">
+				<div class="col s4 ">
+					<p class="center-align">Grupo: {{grupo_default.codigo}}</p>
+				</div>
+				<div class="col s4">
+					<p >Area: {{grupo_default.area}}</p>
+				</div>
+				<div class="col s4">
+					<p>Numero de Alumnos: {{grupo_default.numero_alumnos}}</p>
+				</div>
+
+			</div>
+			<h5 class="center-align"> Lista de Estudiantes</h5>
+		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<table class="highlight">
+				<thead>
+					<tr>
+						<th>DNI</th>
+						<th>Nombre</th>
+						<th>Fecha de Nacimiento</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{%for estudiante in grupo_default.estudiante_set.all%}
+					<tr>
+						<td>{{estudiante.dni}}</td>
+						<td>{{estudiante.apellido}} , {{estudiante.nombre}}</td>
+						<td>{{estudiante.fecha_nacimiento}}</td>				
+					</tr>
+					{%endfor%}
+					
+				</tbody>
+			</table>
+			
+		</div>
+	</div>
+</div>
 {%endblock%}
