@@ -17,3 +17,6 @@ class AsistenciaForm(forms.ModelForm):
 			'registro_tarde': forms.CheckboxInput (attrs={'class':'filled-in'	}),
 			'registro_seminario': forms.CheckboxInput (attrs={'class':'filled-in'	}),
 		}
+
+class AreaForm(forms.Form):
+	 area= forms.ModelChoiceField(queryset = Area.objects.all(),empty_label=None)

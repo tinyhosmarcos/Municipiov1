@@ -14,7 +14,7 @@ def index(request):
 	if query:
 		print("index_entro")
 		estudiante = get_object_or_404(Estudiante,pk=query)
-		return redirect('asistencia:estudiante',estudiante)
+		return redirect('asistencia:estudiante',estudiante.dni)
 	else:
 		print("index_else")
 		context ={
@@ -30,7 +30,12 @@ def estudiante(request, estudiante_id):
 	if query==None and estudiante_id:
 		query=estudiante_id
 
-	obj=RegistroAsistencia.objects.get(estudiante=query,fecha=datetime.now().strftime("%Y-%m-%d"))
+	try:
+		obj=RegistroAsistencia.objects.get(estudiante=query,fecha=datetime.now().strftime("%Y-%m-%d"))
+	except RegistroAsistencia.DoesNotExist:
+		registro=RegistroAsistencia.objects.create(estudiante=Estudiante.objects.get(pk=query))
+		registro.save()
+		obj=RegistroAsistencia.objects.get(estudiante=query,fecha=datetime.now().strftime("%Y-%m-%d"))
 	print(query)
 	print(estudiante_id)
 	form=AsistenciaForm(request.POST or None,instance=obj)
@@ -79,12 +84,42 @@ def estudiante(request, estudiante_id):
 	
 		
 def ranking(request):
+		area_list=Area.objects.all()
 		ranking_list=Ranking.objects.all()
-		print(ranking)
+		ranking_default=Ranking.objects.last()
+
+		form=AreaForm(request.GET or None)
+		query=request.GET.get('area')
+
+		if query:
+			ranking_list=Ranking.objects.filter(area=query)
+
+		if 'ranking_get' in request.GET:
+			query_ranking=request.GET.get('rankinglist_id')
+			ranking_default=Ranking.objects.get(pk=query_ranking)
+			print(query_ranking)
+
+		
 		context={
 			'ranking_list':ranking_list,
+			'area_list':area_list,
+			'form':form,
+			'ranking_default':ranking_default,
 		}
 		return render(request,'asistencia/ranking.html',context)
+
+		
+def grupo(request):
+		grupos_list=Grupo.objects.all()
+		print("Grupo")
+		context={
+			'grupos_list':grupos_list,
+		}
+		return render(request,'asistencia/grupo.html',context)
+
+
+
+
 
 
 

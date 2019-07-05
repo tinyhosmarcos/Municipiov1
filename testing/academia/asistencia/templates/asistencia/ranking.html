@@ -1,0 +1,75 @@
+{%extends 'asistencia/index.html'%}
+{% load static %}
+{%block title%} Ranking Semanal{%endblock%}
+{%block body%}
+
+<div class="container row">
+	<div class="col s3">
+		<div class="section">
+			<form method="GET" >
+				{{form.as_p}}
+				<button class="waves-effect waves-light btn registrar" name="area_get" type="submit">Buscar</button>
+			</form>
+		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<form method="GET">
+				<div class="input-field">		
+						<select name="rankinglist_id">
+							<option value="" disabled selected>Ranking</option>
+							{%for ranking in ranking_list %}
+								<option value="{{ranking.id}}">{{ranking.fecha}}</option>
+							{%endfor%}
+						</select>
+						<label>Ranking</label>
+					</div>
+				<button class="waves-effect waves-light btn registrar" name="ranking_get" type="submit">Buscar</button>
+			</form>
+		</div>
+	</div>	
+
+	<div class="col s9">
+		<div class="section">
+			<div class="row">
+				<div class="col s4">
+					<p>Examen: {{ranking_default.id}}</p>
+				</div>
+				<div class="col s4">
+					<p>Area: {{ranking_default.area}}</p>
+				</div>
+				<div class="col s4">
+					<p>Fecha: {{ranking_default.fecha}}</p>
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="section">
+			<table class="highlight">
+				<thead>
+					<tr>
+						<th>DNI</th>
+						<th>Nombre</th>
+						<th>Codigo</th>
+						<th>Nota</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{%for examen in ranking_default.examen_set.all%}
+					<tr>
+						<td>{{examen.estudiante.dni}}</td>
+						<td>{{examen.estudiante.apellido}} , {{examen.estudiante.nombre}}</td>
+						<td>{{examen.codigo}}</td>
+						<td>{{examen.nota}}</td>						
+					</tr>
+					{%endfor%}
+					
+				</tbody>
+			</table>
+		</div>
+		
+	</div>
+	
+</div>
+
+{%endblock%}
