@@ -87,7 +87,6 @@ def ranking(request):
 		area_list=Area.objects.all()
 		ranking_list=Ranking.objects.all()
 		ranking_default=Ranking.objects.last()
-
 		form=AreaForm(request.GET or None)
 		query=request.GET.get('area')
 
@@ -97,9 +96,23 @@ def ranking(request):
 		if 'ranking_get' in request.GET:
 			query_ranking=request.GET.get('rankinglist_id')
 			ranking_default=Ranking.objects.get(pk=query_ranking)
+				
 			print(query_ranking)
 
-		
+		if 'get_promedio' in request.GET:
+			promedio_temp=0
+			count=0
+			query_ranking=request.GET.get('ranking_id')
+			examenes=Examen.objects.filter(ranking=query_ranking)
+			print(ranking_default.id)
+			for examen in examenes:
+				promedio_temp=promedio_temp+examen.nota
+				count=count+1
+			ranking_default=Ranking.objects.get(pk=query_ranking)
+			ranking_default.promedio=(promedio_temp/count)
+			ranking_default.save()
+			print("entro_promedio")
+
 		context={
 			'ranking_list':ranking_list,
 			'area_list':area_list,
@@ -122,15 +135,19 @@ def grupo(request):
 			query=request.GET.get('grupoid_list')
 			print("grupo_get",query)
 			grupo_default=Grupo.objects.get(pk=query)
+		if 'set_alumnos' in request.GET:
+			count=0
+			query=request.GET.get('grupo_id')
+			estudiantes=Estudiante.objects.filter(grupo=query)
+			grupo_default=Grupo.objects.get(pk=query)
+			grupo_default.numero_alumnos=estudiantes.count()
+			grupo_default.save()
 		context={
 			'grupos_list':grupos_list,
 			'form':form,
 			'grupo_default':grupo_default,
 		}
 		return render(request,'asistencia/grupo.html',context)
-
-
-
 
 
 

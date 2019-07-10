@@ -8,10 +8,10 @@ from . import views
 app_name='asistencia'
 urlpatterns = [
 	url(r'^$', login_required(views.index), name='index'),
-	url(r'(?P<estudiante_id>[0-9]+)/$', views.estudiante, name='estudiante'),
-	url(r'^pruebas',views.pruebas, name='pruebas'),
-	url(r'^ranking',views.ranking, name='ranking'),
-	url(r'^grupos',views.grupo,name='grupo'),
+	url(r'(?P<estudiante_id>[0-9]+)/$', login_required(views.estudiante), name='estudiante'),
+	url(r'^pruebas',login_required(views.pruebas), name='pruebas'),
+	url(r'^ranking',login_required(views.ranking), name='ranking'),
+	url(r'^grupos',login_required(views.grupo),name='grupo'),
 ]	
 
 """

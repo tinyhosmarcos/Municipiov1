@@ -1,56 +1,83 @@
 {%load static%}
-<!DOCTYPE html>
-  <html lang="en">
-    <head>
-    	<title>Logindefinitive</title>
-    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}" media="screen,projection" />
-		
-		<!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	</head>
-	<body>
-      <div class="container">
-        <!-- Page Content goes here -->
+<!DOCTYPE html>
+
+<html lang="en-us" >
+<head>
+<title>Log in | Acedemia Municipal</title>
+
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/login.css' %}" />
+
+
+
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class=" login"
+  data-admin-utc-offset="0">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="/asistencia/">Academia Municipal</a></h1>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
     
 
-          
-		<form method="post">
-			{% csrf_token %}
-			<div class="row">
-				<div class="col s6">
-					<div class="form-group">
-						<label for="username">Nombre de usuario: </label>
-						<input class= "form-control" type="text" name="username">
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6">
-					<div class="form-group">
-						<label for="username">Contraseña: </label>
-						<input class= "form-control" type="password" name="password">
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s6">
-					<div class="form-group">
-						<a href="#">Olvide mi contraseña</a>
-						<input class="btn btn-primary" type="submit" value="Ingresar">
-					</div>
-				</div>
-			</div>
-		</form>
+    
+        
+    
 
-    <div class="row">
-      <div class="col s12">This div is 12-columns wide on all screen sizes</div>
-      <div class="col s6">6-columns (one-half)</div>
-      <div class="col s6">6-columns (one-half)</div>
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        
+        
+
+
+
+
+<div id="content-main">
+	<form method="post" id="login_form">	{% csrf_token %}
+			<div class="form-row">
+			 	<label for="username">Nombre de usuario: </label>
+				<input class= "form-control" type="text" maxlength="254" name="username">
+			</div>
+			<div class="form-row" style="margin-left: 50px">
+			 	<label for="username">Contraseña: </label>
+				<input class= "form-control" type="password"  maxlength="254" name="password">
+			</div>
+			<div class="form-row">
+				<a href="#">Olvide mi contraseña</a>
+			</div>
+			<div class="submit-row">
+	    			
+				<input class="btn btn-primary" type="submit" value="Ingresar">
+	  		</div>
+
+
+   
+        <br class="clear" />
     </div>
-            </div>
-	</body>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
 </html>

@@ -35,7 +35,7 @@
 									{%for examen in estudiante.examen_set.all%}
 								<tr>
 									<td>{{examen.codigo}}da</td>
-									<td>{{examen.fecha}}</td>
+									<td>{{examen.ranking.fecha}}</td>
 									<td>{{examen.nota}}</td>
 								</tr>
 									{%endfor%}
@@ -118,7 +118,7 @@
 		</div>
 		<div class="col s12 center-align">
 			<button class="waves-effect waves-light btn registrar" type="submit">Registrar</button>
-			<a class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_estudiante_change' estudiante.dni %}" style="margin-top:10px">Ver Todo</a>
+			<a  class="btn waves-effect waves-light red lighten-2" href="{%url 'admin:asistencia_estudiante_change' estudiante.dni %}" style="margin-top:10px">Ver Todo</a>
 		</div>			
 
 

@@ -31,11 +31,11 @@
 			{% endblock %}
 			<li><a class="subheader">Editar Datos</a></li>
 			<li><a class="waves-effect" href="{%url 'admin:auth_user_change' user.id%}">Modificar Informacion</a></li>
-
-			
 			<li><a href="{%url 'admin:password_change'%}">Cambiar Contraseña</a></li>
 			<li><a href="{%url 'admin:auth_user_add' %}">Agregar Usuario</a></li>
-				
+			<li><a class="subheader">Alumnos</a></li>
+			<li><a href="{%url 'admin:asistencia_permiso_add'%}">Generar Permiso</a></li>
+			<li><a href="{%url 'admin:asistencia_permiso_changelist'%}">Ver Permisos</a></li>			
 		</ul>
 	
 
@@ -122,12 +122,17 @@
     	
     	var elems_carousel= document.querySelectorAll('.carousel');
     	var instances_carousel= M.Carousel.init(elems_carousel, options);
+
+    	var elems_tooltip = document.querySelectorAll('.tooltipped');
+    	var instances_tooltip = M.Tooltip.init(elems_tooltip, options);
 		});
 
 
 		$(document).ready(function(){
+
+			$('.tooltipped').tooltip();
 			$('.carousel').carousel();
-			 $('select').formSelect();
+			$('select').formSelect();
 			$('.sidenav').sidenav();
 			$('input.autocomplete').autocomplete({
 				data: {

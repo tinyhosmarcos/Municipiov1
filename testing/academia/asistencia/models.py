@@ -33,11 +33,20 @@ class Ranking(models.Model):
 class Examen(models.Model):
 	estudiante 			= models.ForeignKey(Estudiante, on_delete=models.CASCADE)
 	ranking 			= models.ForeignKey(Ranking,on_delete=models.CASCADE)
-	fecha 				= models.DateField(default=date.today)
 	nota				= models.FloatField(default=0)
 	codigo				= models.CharField(max_length=100)
+	class Meta:
+		ordering=['nota']
 	def __str__(self):
 		return self.codigo
+
+class Permiso(models.Model):
+	estudiante 			= models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+	fecha 				= models.DateField(default=date.today)
+	detalle				= models.TextField(max_length=100)
+	def __str__(self):
+		return str(self.estudiante)+str(" ")+str(self.fecha)
+
 
 
 class RegistroAsistencia(models.Model):

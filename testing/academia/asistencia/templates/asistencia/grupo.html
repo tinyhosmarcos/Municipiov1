@@ -36,13 +36,19 @@
 		<div class="section">
 			<div class="row">
 				<div class="col s4 ">
-					<p class="center-align">Grupo: {{grupo_default.codigo}}</p>
+					<p class="center-align">GRUPO: {{grupo_default.codigo}}</p>
 				</div>
 				<div class="col s4">
-					<p >Area: {{grupo_default.area}}</p>
+					<p >AREA: {{grupo_default.area}}</p>
 				</div>
+
 				<div class="col s4">
-					<p>Numero de Alumnos: {{grupo_default.numero_alumnos}}</p>
+					<form method="GET">
+					 <input type="text" name="grupo_id" value="{{grupo_default.id}}" style="display:none">
+					 <button style="margin-top: 8px" class="btn-flat tooltipped waves-effect waves-teal" data-position="bottom" data-tooltip="Ingresar Alumnos" type="submit" name="set_alumnos">
+					 	Numero de Alumnos: {{grupo_default.numero_alumnos}}
+				  	</button>
+				    </form>    
 				</div>
 
 			</div>

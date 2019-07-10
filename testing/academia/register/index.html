@@ -8,10 +8,11 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style2.css' %}" media="screen,projection"/>
 	</head>
 	<body>
+		<div class="container center-align">
 		<form method="post">
 			{% csrf_token %}
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<div class="col s6">
 					<div class="form-group">
 						<label for="username">Nombre de usuario: </label>
 						<input class= "form-control" type="text" name="username">
@@ -19,7 +20,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<div class="col s6">
 					<div class="form-group">
 						<label for="username">Contraseña: </label>
 						<input class= "form-control" type="password" name="password">
@@ -27,7 +28,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<div class="col s6">
 					<div class="form-group">
 						<a href="#">Olvide mi contraseña</a>
 						<input class="btn btn-primary" type="submit" value="Ingresar">
@@ -35,6 +36,7 @@
 				</div>
 			</div>
 		</form>
+		</div>
 
 
 	</body>

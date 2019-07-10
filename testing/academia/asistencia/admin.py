@@ -68,7 +68,8 @@ class RankingAdmin(admin.ModelAdmin):
 	inlines = [ExamenInline]
 	list_display=('fecha','area','promedio')
 
-
+class PermisoAdmin(admin.ModelAdmin):
+	search_fields= ['estudiante__dni']
 
 admin.site.register(Area,AreaAdmin)
 admin.site.register(Grupo,GrupoAdmin)
@@ -76,5 +77,5 @@ admin.site.register(Estudiante,EstudianteAdmin)
 admin.site.register(RegistroAsistencia)
 admin.site.register(Ranking,RankingAdmin)
 
-
+admin.site.register(Permiso,PermisoAdmin)
 admin.site.register(Examen)
