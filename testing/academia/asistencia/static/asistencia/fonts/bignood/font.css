@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'bignoodletitling';
+	src: url('./bignoodletitling.eot');
+	src: local('bignoodletitling'), url('./bignoodletitling.woff') format('woff'), url('./bignoodletitling.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_2555">Text with this font applied</p> */
+.fontsforweb_fontid_2555 {
+	font-family: 'bignoodletitling' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

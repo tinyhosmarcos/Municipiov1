@@ -34,7 +34,7 @@ class Examen(models.Model):
 	estudiante 			= models.ForeignKey(Estudiante, on_delete=models.CASCADE)
 	ranking 			= models.ForeignKey(Ranking,on_delete=models.CASCADE)
 	nota				= models.FloatField(default=0)
-	codigo				= models.CharField(max_length=100)
+	codigo				= models.CharField(max_length=100, default=date.today)
 	class Meta:
 		ordering=['nota']
 	def __str__(self):

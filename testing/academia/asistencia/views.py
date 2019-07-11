@@ -1,11 +1,20 @@
 from django.shortcuts import render,redirect
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from .models import *
 from .forms import *
-from datetime import datetime 
+from datetime import datetime
+from io import BytesIO
+from reportlab.lib.colors import black
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import Paragraph,Table,TableStyle
+
 def index(request):
 	estudiantes_list = Estudiante.objects.all()
 	print("index")
@@ -149,8 +158,71 @@ def grupo(request):
 		}
 		return render(request,'asistencia/grupo.html',context)
 
+def some_view(request,ranking_id):
+	ranking=Ranking.objects.get(pk=ranking_id)
+	examenes=Examen.objects.filter(ranking=ranking_id)
 
+	print("Entro_some")
+	# Create the HttpResponse object with the appropriate PDF headers.
+	response = HttpResponse(content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+	buffer= BytesIO()
 
+	# Create the PDF object, using the response object as its "file."
+	c = canvas.Canvas(buffer,pagesize=A4)
+
+	#Header
+	c.setLineWidth(.3)
+	c.setFont('Helvetica',22)
+	c.drawString(30,750,'Academia Municipal')
+
+	c.setFont('Helvetica',12)
+	c.drawString(30,735,'Ranking Semanal')
+
+	c.setFont('Helvetica-Bold',15)
+	c.drawString(30,710,'Promedio Total: ' +str(ranking.promedio))
+
+	c.setFont('Helvetica-Bold',12)
+	c.drawString(450,750,"Fecha: "+str(ranking.fecha))
+	c.line(440,747,560,747)
+
+	#table header
+	styles 		= getSampleStyleSheet()
+	styleBH 	= styles["Normal"]
+	styleBH.alignment = TA_CENTER
+	styleBH.fontSize  = 10
+
+	numero 		= Paragraph('''DNI''', styleBH)
+	alumno 		= Paragraph('''Alumno''',styleBH)
+	nota 		= Paragraph('''Nota''',styleBH)
+	data=[]
+	data.append([numero, alumno, nota])
+
+	styleN		= styles["BodyText"]
+	styleN.alignment = TA_CENTER
+	styleN.fontSize = 7
+
+	high=650
+	for examen in examenes:
+		this_student = [str(examen.estudiante.dni),str(examen.estudiante.apellido)+", "+str(examen.estudiante.nombre),str(examen.nota)]
+		data.append(this_student)
+		high=high-18
+
+	width, height = A4
+	table = Table(data, colWidths=[3.61 * cm, 9.5 * cm, 6.5 * cm])	
+	table.setStyle(TableStyle([
+		('INNERGRID',(0,0),(-1,-1),0.25, black),
+		('BOX',(0,0),(-1,-1),0.25, black),
+		]))	
+	table.wrapOn(c, width , height)
+	table.drawOn(c, 30, high)
+	c.showPage()
+
+	c.save()
+	pdf=buffer.getvalue()
+	buffer.close()
+	response.write(pdf)
+	return response
 
 
 

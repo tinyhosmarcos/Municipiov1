@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'^pruebas',login_required(views.pruebas), name='pruebas'),
 	url(r'^ranking',login_required(views.ranking), name='ranking'),
 	url(r'^grupos',login_required(views.grupo),name='grupo'),
+	url(r'^(?P<ranking_id>[0-9]+)/some_view/$', views.some_view,name='some_view'),
 ]	
 
 """
