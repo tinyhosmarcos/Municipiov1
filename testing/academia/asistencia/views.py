@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
@@ -14,7 +14,8 @@ from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import Paragraph,Table,TableStyle
-
+#
+ 
 def index(request):
 	estudiantes_list = Estudiante.objects.all()
 	print("index")
@@ -123,6 +124,7 @@ def ranking(request):
 			print("entro_promedio")
 
 		context={
+			'query':query,
 			'ranking_list':ranking_list,
 			'area_list':area_list,
 			'form':form,
@@ -160,12 +162,12 @@ def grupo(request):
 
 def some_view(request,ranking_id):
 	ranking=Ranking.objects.get(pk=ranking_id)
-	examenes=Examen.objects.filter(ranking=ranking_id)
+	examenes=Examen.objects.filter(ranking=ranking_id).order_by('-nota')
 
 	print("Entro_some")
 	# Create the HttpResponse object with the appropriate PDF headers.
 	response = HttpResponse(content_type='application/pdf')
-	response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+	response['Content-Disposition'] = 'attachment; filename="reporte_ranking.pdf"'
 	buffer= BytesIO()
 
 	# Create the PDF object, using the response object as its "file."
@@ -177,10 +179,13 @@ def some_view(request,ranking_id):
 	c.drawString(30,750,'Academia Municipal')
 
 	c.setFont('Helvetica',12)
-	c.drawString(30,735,'Ranking Semanal')
+	c.drawString(30,735,'Ranking Semanal: N°' + str(ranking_id))
 
 	c.setFont('Helvetica-Bold',15)
-	c.drawString(30,710,'Promedio Total: ' +str(ranking.promedio))
+	c.drawString(30,710,'Area: '+str(ranking.area))
+
+	c.setFont('Helvetica-Bold',15)
+	c.drawString(410,710,'Promedio Total: ' +str(ranking.promedio))
 
 	c.setFont('Helvetica-Bold',12)
 	c.drawString(450,750,"Fecha: "+str(ranking.fecha))
@@ -192,24 +197,27 @@ def some_view(request,ranking_id):
 	styleBH.alignment = TA_CENTER
 	styleBH.fontSize  = 10
 
+	posicion	= Paragraph('''#''',styleBH)
 	numero 		= Paragraph('''DNI''', styleBH)
 	alumno 		= Paragraph('''Alumno''',styleBH)
 	nota 		= Paragraph('''Nota''',styleBH)
 	data=[]
-	data.append([numero, alumno, nota])
+	data.append([posicion, numero, alumno, nota])
 
 	styleN		= styles["BodyText"]
 	styleN.alignment = TA_CENTER
 	styleN.fontSize = 7
 
 	high=650
+	posicion_temp=1
 	for examen in examenes:
-		this_student = [str(examen.estudiante.dni),str(examen.estudiante.apellido)+", "+str(examen.estudiante.nombre),str(examen.nota)]
+		this_student = [str(posicion_temp),str(examen.estudiante.dni),str(examen.estudiante.apellido)+", "+str(examen.estudiante.nombre),str(examen.nota)]
 		data.append(this_student)
 		high=high-18
+		posicion_temp=posicion_temp+1
 
 	width, height = A4
-	table = Table(data, colWidths=[3.61 * cm, 9.5 * cm, 6.5 * cm])	
+	table = Table(data, colWidths=[1.9*cm, 3.61 * cm, 9.5 * cm, 4.0 * cm])	
 	table.setStyle(TableStyle([
 		('INNERGRID',(0,0),(-1,-1),0.25, black),
 		('BOX',(0,0),(-1,-1),0.25, black),
@@ -226,50 +234,99 @@ def some_view(request,ranking_id):
 
 
 
+def some_asistencia(request, estudiante_id):
+	estudiante=Estudiante.objects.get(pk=estudiante_id)
+	registro_asistencia=RegistroAsistencia.objects.filter(estudiante=estudiante_id)
+	print("Entro_asistencia")
+	# Create the HttpResponse object with the appropriate PDF headers.
+	response = HttpResponse(content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="reporte_asistencia.pdf"'
+	buffer= BytesIO()
+
+	# Create the PDF object, using the response object as its "file."
+	c = canvas.Canvas(buffer,pagesize=A4)
+
+	#Header
+	c.setLineWidth(.3)
+	c.setFont('Helvetica',22)
+	c.drawString(30,750,'Academia Municipal')
+
+	c.setFont('Helvetica',12)
+	c.drawString(30,735,'Registro de Asistencia')
+
+	c.setFont('Helvetica-Bold',15)
+	c.drawString(30,710,'Estudiante: '+str(estudiante.apellido)+", "+str(estudiante.nombre))
+
+	c.setFont('Helvetica',12)
+	c.drawString(410,710,'Area: ' +str(estudiante.grupo.area))
+
+	c.setFont('Helvetica-Bold',12)
+	c.drawString(450,750,"DNI: "+str(estudiante.dni))
+	c.line(440,747,560,747)
+
+	styles 		= getSampleStyleSheet()
+	styleBH 	= styles["Normal"]
+	styleBH.alignment = TA_CENTER
+	styleBH.fontSize  = 10
+
+	fecha		= Paragraph('''Fecha''',styleBH)
+	dia 		= Paragraph('''Dia''', styleBH)
+	tarde 		= Paragraph('''Tarde''',styleBH)
+	seminario	= Paragraph('''Seminario''',styleBH)
+	data=[]
+	data.append([fecha, dia, tarde, seminario])
+
+	styleN		= styles["BodyText"]
+	styleN.alignment = TA_CENTER
+	styleN.fontSize = 7
+
+	high=650
+	for registro in registro_asistencia:
+		this_registro = [str(registro.fecha),
+		'Asistio' if registro.registro_dia else 'No',
+		'Asistio' if registro.registro_tarde else 'No',
+		'Asistio' if registro.registro_seminario else 'No']
 
 
-
-
-
-
-
-
-
-
-
-
-	
-
-def pruebas(request):
-
-
-	estudiantes_list = Estudiante.objects.all()
-
-	obj=RegistroAsistencia.objects.get(estudiante="72386701",fecha=datetime.now().strftime("%Y-%m-%d"))
-
-	form=AsistenciaForm(request.POST or None,instance=obj)
-	context={
-		'estudiantes_list':estudiantes_list,
-		'form':form,
-	}
-	if form.is_valid():
+		data.append(this_registro)
+		high=high-18
 		
-		form.save()
-		form=AsistenciaForm()
+	width, height = A4
+	table = Table(data, colWidths=[7.5 *cm, 3.0 * cm, 3.0 * cm, 3.0 * cm])	
+	table.setStyle(TableStyle([
+		('INNERGRID',(0,0),(-1,-1),0.25, black),
+		('BOX',(0,0),(-1,-1),0.25, black),
+		]))	
+	table.wrapOn(c, width , height)
+	table.drawOn(c, 30, high)
+	c.showPage()
 
-	elif form.non_field_errors():
-		data=request.POST.copy()
-		fecha=data.get('fecha')
-		estudiante=data.get('estudiante')
-		registro=RegistroAsistencia.objects.get(estudiante=estudiante,fecha=fecha)
-		data_dia=data.get('registro_dia')
-		data_tarde=data.get('registro_tarde')
-		data_seminario=data.get('registro_seminario')
+	c.save()
+	pdf=buffer.getvalue()
+	buffer.close()
+	response.write(pdf)
+	return response
 
-		registro.registro_dia= True if data_dia=="on" else False
-		registro.registro_tarde= True if data_tarde=="on" else False
-		registro.registro_seminario= True if data_seminario=="on" else False	
 
-		registro.save()
+def pruebas(request,area_id):
+	 print(area_id)
+	 return render(request, 'asistencia/testing.html',{'area_id':area_id}
+	 	)
 
-	return render(request,'asistencia/testing.html',context)
+def get_data(request,area_id):
+	ranking_list=Ranking.objects.filter(area=area_id).order_by('fecha')
+	labels=[]
+	default_items=[]
+	for ranking in ranking_list:
+		labels.append(str(ranking.fecha))
+		default_items.append(str(ranking.promedio))
+
+	#labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+	#default_items=[12,18,13,14,15,16]
+	data ={
+		"labels":labels,
+		"default":default_items,
+	}
+	return JsonResponse(data)
+
+

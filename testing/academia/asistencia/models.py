@@ -26,19 +26,19 @@ class Estudiante(models.Model):
 class Ranking(models.Model):
 	area 	 			= models.ForeignKey(Area,on_delete=models.CASCADE)
 	fecha 				= models.DateField(default=date.today)
-	promedio			= models.FloatField(default=0)
+	promedio			= models.DecimalField(default=0, max_digits=6,decimal_places=3)
 	def __str__(self):
 		return str(self.fecha)
 
 class Examen(models.Model):
 	estudiante 			= models.ForeignKey(Estudiante, on_delete=models.CASCADE)
 	ranking 			= models.ForeignKey(Ranking,on_delete=models.CASCADE)
-	nota				= models.FloatField(default=0)
-	codigo				= models.CharField(max_length=100, default=date.today)
+	nota				= models.DecimalField(default=0,max_digits=6,decimal_places=3)
+
 	class Meta:
 		ordering=['nota']
 	def __str__(self):
-		return self.codigo
+		return str(self.id)
 
 class Permiso(models.Model):
 	estudiante 			= models.ForeignKey(Estudiante, on_delete=models.CASCADE)

@@ -37,9 +37,13 @@
 			<div class="col s6 m6 l6 xl6">
 				<a class="btn waves-effect waves-light red lighten-2 col s12 m12 l12 xl12" href="{%url 'admin:asistencia_ranking_changelist' %}">Eliminar</a>
 			</div>
-			<div class="col s12 m12 l12 xl12 center-align" style="margin-top: 20px">
+			<div class="col s6 m6 l6 xl6 center-align" style="margin-top: 20px">
 
 				<a href="{%url 'asistencia:some_view' ranking_default.id %}" class="btn-floating btn-large tooltipped waves-effect waves-light red lighten-2 " data-position="bottom" data-tooltip="Generar Reporte"><i class="material-icons">picture_as_pdf</i></a>
+			</div>
+			<div class="col s6 m6 l6 xl6 center-align" style="margin-top: 20px">
+				<a href="{%url 'asistencia:pruebas' query  %}" class="btn-floating btn-large tooltipped waves-effect waves-light red lighten-2 " data-position="bottom" data-tooltip="Generar Grafico Por Area"><i class="material-icons">show_chart</i></a>
+				
 			</div>
 			
 		</div>
@@ -53,7 +57,7 @@
 	<div class="col s9 m9 l9 xl9">
 		<div class="section">
 			<div class="row">
-				<div class="col s3 m3 l3 xl3 ">
+				<div class="col s2 m2 l2 xl2 ">
 					<p class="center-align ">EXAMEN: {{ranking_default.id}}</p>
 				</div>
 				<div class="col s3 m3 l3 xl3 ">
@@ -62,10 +66,10 @@
 				<div class="col s3 m3 l3 xl3">
 					<p>FECHA: {{ranking_default.fecha}}</p>
 				</div>
-				<div class="col s3 m3 l3 xl3 ">
+				<div class="col s4 m4 l4 xl4 ">
 					<form method="GET">
 					 <input type="text" name="ranking_id" value="{{ranking_default.id}}" style="display:none">
-					 <button style="margin-top: 8px" class="btn-flat tooltipped waves-effect waves-teal" data-position="bottom" data-tooltip="Generar Promedio" type="submit" name="get_promedio">Promedio: {{ranking_default.promedio}}
+					 <button style="margin-top: 8px" class="btn-flat tooltipped waves-effect waves-teal col s12 m12 l12 xl12" data-position="bottom" data-tooltip="Generar Promedio" type="submit" name="get_promedio">Promedio: {{ranking_default.promedio|floatformat:"2"}}
 				  	</button>
 				    </form>    
 					
@@ -78,9 +82,9 @@
 			<table class="highlight">
 				<thead>
 					<tr>
+						<th class="center-align">Posición</th>
 						<th>DNI</th>
 						<th>Nombre</th>
-						<th>Codigo</th>
 						<th>Nota</th>
 					</tr>
 				</thead>
@@ -88,9 +92,9 @@
 				<tbody>
 					{%for examen in ranking_default.examen_set.all|dictsortreversed:"nota" %}
 					<tr>
+						<td class="center-align">{{forloop.counter}}</td>
 						<td>{{examen.estudiante.dni}}</td>
 						<td>{{examen.estudiante.apellido}} , {{examen.estudiante.nombre}}</td>
-						<td>{{examen.codigo}}</td>
 						<td>{{examen.nota}}</td>						
 					</tr>
 					{%endfor%}

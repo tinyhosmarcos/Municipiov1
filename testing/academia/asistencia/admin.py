@@ -36,7 +36,6 @@ class GrupoAdmin(admin.ModelAdmin):
 
 class RegistroAsistenciaInline(admin.TabularInline):
 	model = RegistroAsistencia
-	extra = 4
 
 
 class EstudianteAdmin(admin.ModelAdmin):
@@ -53,7 +52,7 @@ class EstudianteAdmin(admin.ModelAdmin):
 		models.IntegerField: {'widget': forms.NumberInput(attrs={'size': '40'})},
 	}
 	list_display=('dni','nombre','apellido','fecha_nacimiento')
-	search_fields=['nombre']
+	search_fields=['nombre','dni']
 
 class ExamenInline(admin.TabularInline):
 	model = Examen

@@ -1,100 +1,87 @@
 {% load static %}
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Academia Municipal</title>
+<head>
+		<title>{% block title%}Academia Municipal{% endblock %}</title>
+		{% block header %}
+
 		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}">
 		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style.css' %}">
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		
+		<link rel="stylesheet" href="{% static 'asistencia/icons.css' %}">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		{% endblock %}
+
 	</head>
 <body>
-
-<div class="container">
-	<div class="row">
-		<form method="POST">{%csrf_token%}
-			<div class="col s12">
-				<label>
-					{{form.estudiante}}
-				</label>
-			</div>
-	<div class="col s1">
-		<i class="small material-icons date ">date_range</i>
-			</div>
-	  	<div class="col s11">
-	  		<label>
- 		 		{{form.fecha}}
-			</label>
-		</div>
-	
-		<h6 class="header turno">Turno</h6>
-
-		<div class="col s4">
-			<label>
-				{{form.registro_dia}}
-				<span>Mañana</span>
-			</label>
-		</div>
-		<div class="col s4">
-			<label>
-				{{form.registro_tarde}}
-				<span>Tarde</span>
-			</label>
-		</div>
-		<div class="col s4">
-			<label>
-				{{form.registro_seminario}}
-				<span>Seminario</span>
-			</label>
-		</div>
-		<div class="col s12 center-align">
-			<button class="waves-effect waves-light btn registrar" type="submit">Registrar</button>
-		</div>			
-<input type="submit" value="Save">
-
-		</form>
+	<div class="container">
+		<canvas id="myChart" width="300" height="300"></canvas>
 	</div>
-</div>
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
-	<script type="text/javascript">
-		$('#checkbox-value').text($('#checkbox3').val());
 
-$("#checkbox3").on('change', function() {
-  if ($(this).is(':checked')) {
-    $(this).attr('value', 'true');
-  } else {
-    $(this).attr('value', 'false');
-  }
-  
-  $('#checkbox-value').text($('#checkbox3').val());
-});
-		document.addEventListener('DOMContentLoaded', function() {
-		var elems_sidenav = document.querySelectorAll('.sidenav');
-		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
-		
-		var elems_autocomplete = document.querySelectorAll('.autocomplete');
-		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
-
-		var elems_datepicker = document.querySelectorAll('.datepicker');
-    	var instances_datepicker = M.Datepicker.init(elems_datepicker, options);
-		});
-
-
-		$(document).ready(function(){
-			$('.datepicker').datepicker({
-				format:'yyyy-mm-dd',
-				
-			});
-			$('.sidenav').sidenav();
-			$('input.autocomplete').autocomplete({
-				data: {
-				{% for estudiant in estudiantes_list %}
-					{{estudiant.dni}}:null,
-				{% endfor %}
-				},
-    		});
-		});
-        
-	</script>	
+	<p>Hello World</p>
 </body>
+
+<script type="text/javascript" src="{% static 'asistencia/js/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'asistencia/js/Chart.min.js' %}"></script>
+<script>
+var endpoint= "{%url 'asistencia:api-data' area_id %}"
+var defaultData=[]
+var labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
+$.ajax({
+	method: "GET",
+	url : endpoint,
+	success: function(data){
+		labels=data.labels
+		defaultData=data.default
+		setChart()
+
+	},
+
+	error: function(error_data){
+		console.log("error")
+		console.log(error_data)
+	}
+})
+function setChart(){
+	var ctx = document.getElementById('myChart').getContext('2d');
+	var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: defaultData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}
+
+
+</script>
 </html>

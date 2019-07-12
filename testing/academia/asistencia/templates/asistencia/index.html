@@ -105,7 +105,7 @@
 		</div>	
 		{% endblock%}
 	
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{% static 'asistencia/js/jquery-2.1.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
 	{%block script%}
 	<script type="text/javascript">
@@ -126,6 +126,9 @@
 
     	var elems_tooltip = document.querySelectorAll('.tooltipped');
     	var instances_tooltip = M.Tooltip.init(elems_tooltip, options);
+
+
+
 		});
 
 
