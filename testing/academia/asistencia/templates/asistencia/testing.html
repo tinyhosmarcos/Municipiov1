@@ -1,55 +1,67 @@
+{%extends 'asistencia/index.html'%}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-		<title>{% block title%}Academia Municipal{% endblock %}</title>
-		{% block header %}
+{%block title%} Graficos{%endblock%}
+{%block body%}
 
-		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/css/materialize.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'asistencia/style.css' %}">
+	<div class="row">
+        <div class="col s6 m6 l6 xl6 container">
+            <div class="container">
+                <h5>Area: {{area_id}}</h5>
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="col s6 m6 l6 xl6 container">
+            <div class="container">
+                <h5>Ranking-Fecha: {{ranking_last.fecha}}</h5>
+            </div>
+            <canvas id="myChart_examenes"></canvas>
+        </div>
 		
-		<link rel="stylesheet" href="{% static 'asistencia/icons.css' %}">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		{% endblock %}
-
-	</head>
-<body>
-	<div class="container">
-		<canvas id="myChart" width="300" height="300"></canvas>
 	</div>
 
-	<p>Hello World</p>
-</body>
 
-<script type="text/javascript" src="{% static 'asistencia/js/jquery-2.1.1.min.js' %}"></script>
+
+{%endblock%}
+{%block script%}
+
 <script src="{% static 'asistencia/js/Chart.min.js' %}"></script>
+
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+var elems = document.querySelectorAll('.sidenav');
+var instances = M.Sidenav.init(elems);
+});
+ 
 var endpoint= "{%url 'asistencia:api-data' area_id %}"
 var defaultData=[]
-var labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
+var defaultData_examenes=[]
+var labels_examenes=[]
+var labels=[];
 $.ajax({
-	method: "GET",
-	url : endpoint,
-	success: function(data){
-		labels=data.labels
-		defaultData=data.default
-		setChart()
+    method: "GET",
+    url : endpoint,
+    success: function(data){
+        labels=data.labels
+        labels_examenes=data.labels_examenes
+        defaultData=data.default
+        defaultData_examenes=data.default_items_examenes
+        setChart_area_ranking()
+        setChart_examenes_last()
+    },
 
-	},
-
-	error: function(error_data){
-		console.log("error")
-		console.log(error_data)
-	}
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
 })
-function setChart(){
-	var ctx = document.getElementById('myChart').getContext('2d');
-	var myChart = new Chart(ctx, {
+function setChart_area_ranking(){
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: labels,
         datasets: [{
-            label: '# of Votes',
+            label: 'Promedio-Ranking',
             data: defaultData,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -81,7 +93,48 @@ function setChart(){
     }
 });
 }
-
-
+function setChart_examenes_last(){
+    var ctx = document.getElementById('myChart_examenes').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels_examenes,
+        datasets: [{
+            label: 'Nota-Alumno',
+            data: defaultData_examenes,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}
 </script>
-</html>
+{%endblock%}
+
+
+{%block script_base%}
+{%endblock%}

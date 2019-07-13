@@ -42,8 +42,13 @@
 				<a href="{%url 'asistencia:some_view' ranking_default.id %}" class="btn-floating btn-large tooltipped waves-effect waves-light red lighten-2 " data-position="bottom" data-tooltip="Generar Reporte"><i class="material-icons">picture_as_pdf</i></a>
 			</div>
 			<div class="col s6 m6 l6 xl6 center-align" style="margin-top: 20px">
-				<a href="{%url 'asistencia:pruebas' query  %}" class="btn-floating btn-large tooltipped waves-effect waves-light red lighten-2 " data-position="bottom" data-tooltip="Generar Grafico Por Area"><i class="material-icons">show_chart</i></a>
-				
+				<a  class="btn-floating dropdown-trigger btn-large  tooltipped waves-effect waves-light red lighten-2 " data-position="bottom" data-tooltip="Generar Grafico Por Area" data-target='droparea'><i class="material-icons">show_chart</i></a>
+				<ul id='droparea' class='dropdown-content teal lighten-2' >
+					<li><a href="{%url 'asistencia:pruebas' 'Ingenierias' %}" class="black-text">Ingenierias</a></li>
+					<li><a href="{%url 'asistencia:pruebas' 'Sociales' %}" class="black-text">Sociales</a></li>
+					
+				</ul>
+        
 			</div>
 			
 		</div>
@@ -109,4 +114,6 @@
 	
 </div>
 
+{%endblock%}
+{%block script_base%}
 {%endblock%}

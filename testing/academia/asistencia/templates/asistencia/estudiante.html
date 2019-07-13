@@ -21,7 +21,20 @@
   				
 			  		<div class="container divider"></div>
 			  		<div class="container section">
-			  			<h3>Resultado de Examenes</h3>
+			  			<div class=""><h4>Resultado de Examenes</h4></div>
+						<ul id="dropdown2" class="dropdown-content">
+						<li><a href="{% url 'asistencia:some_reporte_alumno' estudiante.dni %}">Reporte <i class="material-icons right">picture_as_pdf</i></a></li>
+						<li><a class="modal-trigger" href="#modal1">Grafico<i class="material-icons right">show_chart</i></a>
+							
+						</li>
+						</ul>
+						<a class="btn dropdown-trigger" href="#!" data-target="dropdown2">Generar Reporte<i class="material-icons right">arrow_drop_down</i></a>
+						<div id="modal1" class="modal">
+								<div class="modal-content">
+								<h4>Grafico</h4>
+								  <canvas id="myChart"></canvas>
+								</div>
+							</div>
 							<table>
 								<thead>
 								<tr>
@@ -71,6 +84,7 @@
 					</div>
 					</div>
 					</div>
+
 					<div class="container divider"></div>
 					<div class="container section">
 						 <h3 class="header">Registro de Asistencia</h3>
@@ -137,24 +151,27 @@
 	{%endblock%}	
 
 	{%block script%}
+	<script src="{% static 'asistencia/js/Chart.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', function() {
-		var elems_sidenav = document.querySelectorAll('.sidenav');
-		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
+	
+		var elems_modal = document.querySelectorAll('.modal');
+    	var instances = M.Modal.init(elems_modal);
 		
-		var elems_autocomplete = document.querySelectorAll('.autocomplete');
-		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
-
-		var elems_datepicker = document.querySelectorAll('.datepicker');
-    	var instances_datepicker = M.Datepicker.init(elems_datepicker, options);
-
-    	var elems_dropdown = document.querySelectorAll('.dropdown-trigger');
-    	var instances_dropdown = M.Dropdown.init(elems_dropdown, options);
+    
 		});
-
+			var elems_dropdown = document.querySelectorAll('.dropdown-trigger');
+    	var instances_dropdown = M.Dropdown.init(elems_dropdown, {
+				onOpenStart: function () {
+					setChart_examenes_alumno()
+					console.log("I trigger as soon as the page is loaded");
+				}
+});
 
 		$(document).ready(function(){
-			$('.dropdown-trigger').dropdown();
+		
+	
 			$('.datepicker').datepicker({
 				format:'yyyy-mm-dd',
 				
@@ -168,9 +185,66 @@
 				},
     		});
 		});
-        
+        var endpoint= "{%url 'asistencia:get_data_estudiante' estudiante.dni %}"
+		var defaultData=[]
+		var labels=[];
+		$.ajax({
+		    method: "GET",
+		    url : endpoint,
+		    success: function(data){
+		        labels=data.labels
+		        defaultData=data.default
+		      
+		    },
+
+		    error: function(error_data){
+		        console.log("error")
+		        console.log(error_data)
+		    }
+		})
+		function setChart_examenes_alumno(){
+		    var ctx = document.getElementById('myChart').getContext('2d');
+		    var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: {
+		        labels: labels,
+		        datasets: [{
+		            label: 'Fecha-Nota',
+		            data: defaultData,
+		            backgroundColor: [
+		                'rgba(255, 99, 132, 0.2)',
+		                'rgba(54, 162, 235, 0.2)',
+		                'rgba(255, 206, 86, 0.2)',
+		                'rgba(75, 192, 192, 0.2)',
+		                'rgba(153, 102, 255, 0.2)',
+		                'rgba(255, 159, 64, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(255, 99, 132, 1)',
+		                'rgba(54, 162, 235, 1)',
+		                'rgba(255, 206, 86, 1)',
+		                'rgba(75, 192, 192, 1)',
+		                'rgba(153, 102, 255, 1)',
+		                'rgba(255, 159, 64, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: true
+		                }
+		            }]
+		        }
+		    }
+		});
+		}
 	</script>	
 	{%endblock%}
 
 
 
+{%block script_base%}
+{%endblock%}

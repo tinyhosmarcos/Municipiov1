@@ -82,20 +82,29 @@
 			</div>
 		</div>
 
-				<div class="col s9">
-				<div class="nav-wrapper">
+				<div class="col s6">
+				<div class="section">
+				<div class="nav-wrapper col s12 m12 l12 xl12">
 					{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 					<form  method="get">
-							<div class="input-field col s6">
+							<div class="input-field col s6 m6 l6 xl6">
 							<i class="material-icons prefix">search</i>
 							<input type="text" name="estudiante_id" id="autocomplete-input" class="autocomplete" >
 							<label for="autocomplete-input">Codigo de Alumno</label>
 							<button  class="btn waves-effect waves-light" type="submit" value="elegir_estudiante">Buscar
    							 <i class="material-icons right">send</i>
  							</button>
-						</div>
+						</div>						
 					</form>
 				</div>
+
+			</div>
+				<div class="divider"></div>
+				<div class="section">
+					<h5 class="center-align">Mejores ultimas notas</h5>
+					<canvas id="myChart"></canvas>
+				</div>
+
 				{%block content%}
 		{%endblock%}
 			
@@ -107,37 +116,95 @@
 	
 	<script type="text/javascript" src="{% static 'asistencia/js/jquery-2.1.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'asistencia/js/materialize.min.js' %}"></script>
+
+	{%block script_base%}
+	<script src="{% static 'asistencia/js/Chart.min.js' %}"></script>
+	<script type="text/javascript">
+		  var endpoint= "{%url 'asistencia:top_data' %}"
+		var defaultData=[]
+		var labels=[];
+		$.ajax({
+		    method: "GET",
+		    url : endpoint,
+		    success: function(data){
+		        labels=data.labels
+		        defaultData=data.default
+		        setChart_examenes_alumno()
+		    },
+
+		    error: function(error_data){
+		        console.log("error")
+		        console.log(error_data)
+		    }
+		})
+		function setChart_examenes_alumno(){
+		    var ctx = document.getElementById('myChart').getContext('2d');
+		    var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: {
+		        labels: labels,
+		        datasets: [{
+		            label: 'Fecha-Nota',
+		            data: defaultData,
+		            backgroundColor: [
+		                'rgba(255, 99, 132, 0.2)',
+		                'rgba(54, 162, 235, 0.2)',
+		                'rgba(255, 206, 86, 0.2)',
+		                'rgba(75, 192, 192, 0.2)',
+		                'rgba(153, 102, 255, 0.2)',
+		                'rgba(255, 159, 64, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(255, 99, 132, 1)',
+		                'rgba(54, 162, 235, 1)',
+		                'rgba(255, 206, 86, 1)',
+		                'rgba(75, 192, 192, 1)',
+		                'rgba(153, 102, 255, 1)',
+		                'rgba(255, 159, 64, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: true
+		                }
+		            }]
+		        }
+		    }
+		});
+		}
+
+	</script>
+	{%endblock%}
 	{%block script%}
 	<script type="text/javascript">
 
 
 		document.addEventListener('DOMContentLoaded', function() {
 		var elems_sidenav = document.querySelectorAll('.sidenav');
-		var instances_sidenav = M.Sidenav.init(elems_sidenav, options);
-		
-		var elems_autocomplete = document.querySelectorAll('.autocomplete');
-		var instances_autocomplete = M.Autocomplete.init(elems_autocomplete, options);
+		var instances_sidenav = M.Sidenav.init(elems_sidenav);
 		
 		var elems_select = document.querySelectorAll('select');
-    	var instances_select = M.FormSelect.init(elems_select, options);
+    	var instances_select = M.FormSelect.init(elems_select);
     	
     	var elems_carousel= document.querySelectorAll('.carousel');
-    	var instances_carousel= M.Carousel.init(elems_carousel, options);
+    	var instances_carousel= M.Carousel.init(elems_carousel);
 
     	var elems_tooltip = document.querySelectorAll('.tooltipped');
-    	var instances_tooltip = M.Tooltip.init(elems_tooltip, options);
+    	var instances_tooltip = M.Tooltip.init(elems_tooltip);
 
+		var elems_dropdown = document.querySelectorAll('.dropdown-trigger');
+    	var instances_dropdown = M.Dropdown.init(elems_dropdown);
 
 
 		});
 
 
 		$(document).ready(function(){
-
-			$('.tooltipped').tooltip();
-			$('.carousel').carousel();
-			$('select').formSelect();
-			$('.sidenav').sidenav();
+			
 			$('input.autocomplete').autocomplete({
 				data: {
 				{% for estudiante in estudiantes_list %}
@@ -146,7 +213,7 @@
 				},
     		});
 		});
-        
+              
 	</script>	
 	{%endblock%}
 	</body>

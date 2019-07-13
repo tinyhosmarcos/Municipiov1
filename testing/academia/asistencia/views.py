@@ -18,7 +18,6 @@ from reportlab.platypus import Paragraph,Table,TableStyle
  
 def index(request):
 	estudiantes_list = Estudiante.objects.all()
-	print("index")
 	query=request.GET.get('estudiante_id')
 
 	if query:
@@ -33,10 +32,10 @@ def index(request):
 		return render(request, 'asistencia/index.html', context)
 
 
-
 def estudiante(request, estudiante_id):
 	estudiantes_list = Estudiante.objects.all()
 	query=request.GET.get('estudiante_id')
+	
 	if query==None and estudiante_id:
 		query=estudiante_id
 
@@ -124,7 +123,6 @@ def ranking(request):
 			print("entro_promedio")
 
 		context={
-			'query':query,
 			'ranking_list':ranking_list,
 			'area_list':area_list,
 			'form':form,
@@ -232,6 +230,77 @@ def some_view(request,ranking_id):
 	response.write(pdf)
 	return response
 
+def some_reporte_alumno(request,estudiante_id):
+	estudiante=Estudiante.objects.get(pk=estudiante_id)
+	registro_examenes=Examen.objects.filter(estudiante=estudiante_id).order_by('ranking__fecha')
+	print("Entro_examen_reporte")
+	# Create the HttpResponse object with the appropriate PDF headers.
+	response = HttpResponse(content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="reporte_examenes.pdf"'
+	buffer= BytesIO()
+
+	# Create the PDF object, using the response object as its "file."
+	c = canvas.Canvas(buffer,pagesize=A4)
+
+	#Header
+	c.setLineWidth(.3)
+	c.setFont('Helvetica',22)
+	c.drawString(30,750,'Academia Municipal')
+
+	c.setFont('Helvetica',12)
+	c.drawString(30,735,'Registro de Examenes')
+
+	c.setFont('Helvetica-Bold',15)
+	c.drawString(30,710,'Estudiante: '+str(estudiante.apellido)+", "+str(estudiante.nombre))
+
+	c.setFont('Helvetica',12)
+	c.drawString(410,710,'Area: ' +str(estudiante.grupo.area))
+
+	c.setFont('Helvetica-Bold',12)
+	c.drawString(450,750,"DNI: "+str(estudiante.dni))
+	c.line(440,747,560,747)
+
+	styles 		= getSampleStyleSheet()
+	styleBH 	= styles["Normal"]
+	styleBH.alignment = TA_CENTER
+	styleBH.fontSize  = 10
+
+	numero		= Paragraph('''Examen N°''',styleBH)
+	fecha 		= Paragraph('''Fecha''', styleBH)
+	nota 		= Paragraph('''Nota''',styleBH)
+	promedio	= Paragraph('''Promedio General del Ranking''',styleBH)
+	data=[]
+	data.append([numero,fecha,nota,promedio])
+
+	styleN		= styles["BodyText"]
+	styleN.alignment = TA_CENTER
+	styleN.fontSize = 7
+
+	high=650
+	counter_num=1
+	for examen in registro_examenes:
+		this_registro=[str(counter_num), str(examen.ranking.fecha), str(examen.nota),str(examen.ranking.promedio)]
+		data.append(this_registro)
+		high=high-18
+		counter_num=counter_num+1
+		
+	width, height = A4
+	table = Table(data, colWidths=[2.5 *cm, 4.0 * cm, 4.0 * cm, 7.5 * cm])	
+	table.setStyle(TableStyle([
+		('INNERGRID',(0,0),(-1,-1),0.25, black),
+		('BOX',(0,0),(-1,-1),0.25, black),
+		]))	
+	table.wrapOn(c, width , height)
+	table.drawOn(c, 30, high)
+	c.showPage()
+
+	c.save()
+	pdf=buffer.getvalue()
+	buffer.close()
+	response.write(pdf)
+	return response
+
+
 
 
 def some_asistencia(request, estudiante_id):
@@ -309,17 +378,55 @@ def some_asistencia(request, estudiante_id):
 
 
 def pruebas(request,area_id):
-	 print(area_id)
-	 return render(request, 'asistencia/testing.html',{'area_id':area_id}
-	 	)
+	 ranking_last=Ranking.objects.last()
+	 context={
+	 	'area_id':area_id,
+	 	'ranking_last':ranking_last,
+	 }
+	 return render(request, 'asistencia/testing.html',context)
 
 def get_data(request,area_id):
 	ranking_list=Ranking.objects.filter(area=area_id).order_by('fecha')
+	ranking_last=Ranking.objects.last()
+	examenes_list=Examen.objects.filter(ranking=ranking_last.id)
 	labels=[]
+	labels_examenes=[]
+
 	default_items=[]
+	default_items_examenes=[]
+	
 	for ranking in ranking_list:
 		labels.append(str(ranking.fecha))
 		default_items.append(str(ranking.promedio))
+
+	for examen in examenes_list:
+		labels_examenes.append(str(examen.estudiante.dni))
+		default_items_examenes.append(str(examen.nota))
+
+	#labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+	#default_items=[12,18,13,14,15,16]
+	data ={
+		"labels":labels,
+		"default":default_items,
+		"labels_examenes":labels_examenes,
+		"default_items_examenes":default_items_examenes,
+	}
+	return JsonResponse(data)
+
+
+def top_data(request):
+
+	examenes_list=Examen.objects.filter(nota__gt=14.50).order_by('-nota')
+	labels=[]
+
+	default_items=[]
+	counter_alumnos=1
+	for examen in examenes_list:
+		if counter_alumnos>9:
+			break
+		labels.append(str(examen.estudiante.apellido)+", "+str(examen.estudiante.nombre))
+		default_items.append(str(examen.nota))
+		counter_alumnos=counter_alumnos+1
 
 	#labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
 	#default_items=[12,18,13,14,15,16]
@@ -329,4 +436,21 @@ def get_data(request,area_id):
 	}
 	return JsonResponse(data)
 
+def get_data_estudiante(request,estudiante_id):
+	examenes_list=Examen.objects.filter(estudiante=estudiante_id).order_by('ranking__fecha')
+	
+	labels=[]
 
+	default_items=[]
+	
+	for examen in examenes_list:
+		labels.append(str(examen.ranking.fecha))
+		default_items.append(str(examen.nota))
+
+	#labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+	#default_items=[12,18,13,14,15,16]
+	data ={
+		"labels":labels,
+		"default":default_items,
+	}
+	return JsonResponse(data)

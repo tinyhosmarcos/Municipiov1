@@ -14,7 +14,10 @@ urlpatterns = [
 	url(r'^grupos',login_required(views.grupo),name='grupo'),
 	url(r'^(?P<ranking_id>[0-9]+)/some_view/$', views.some_view,name='some_view'),
 	url(r'^(?P<estudiante_id>[0-9]+)/some_asistencia/$',views.some_asistencia, name='some_asistencia'),
+	url(r'^(?P<estudiante_id>[0-9]+)/some_reporte_alumno/$',views.some_reporte_alumno, name='some_reporte_alumno'),
 	url(r'^(?P<area_id>[\w\-]+)/api/data/$',views.get_data,name='api-data'),
+	url(r'^top/data/$',views.top_data,name='top_data'),
+	url(r'^(?P<estudiante_id>[0-9]+)/api/estudiante/$',views.get_data_estudiante,name='get_data_estudiante'),
 ]	
 
 """
